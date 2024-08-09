@@ -1,5 +1,4 @@
 using LocationAPI.BLL.Interface;
-using LocationAPI.BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocationAPI.Controllers
@@ -22,7 +21,7 @@ namespace LocationAPI.Controllers
                 return BadRequest("No file uploaded.");
             }
 
-            var result = await _dataService.ReadCSVFileAsync(file);
+            var result = await _dataService.CreateTransactionsFromFileAsync(file);
             return Ok(result);
         }
 

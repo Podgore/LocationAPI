@@ -25,23 +25,24 @@ namespace LocationAPI.BLL.Services
             _context = context;
         }
 
-        public async Task<List<Transaction>> ReadCSVFileAsync(IFormFile file)
+        public async Task<List<Transaction>> CreateTransactionsFromFileAsync(IFormFile file)
         {
             using (var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8))
             {
-                List<Transaction> transactions = new List<Transaction>();
+                var transactions = new List<Transaction>();
 
                 var isFirstRow = true;
 
                 while (!reader.EndOfStream)
                 {
-                    var content = reader.ReadLine();
+                    var line = reader.ReadLine();
+
                     if (isFirstRow)
                     {
                         isFirstRow = false;
                         continue;
                     }
-                    var props = content.Split(',').ToList();
+                    var props = line.Split(',').ToList();
 
                     var tempLatitude = props[5].Replace("\"", "").Split(',')[0].Trim();
                     var tempLonger = props[6].Replace("\"", "").Split(',')[0].Trim();
@@ -98,7 +99,6 @@ namespace LocationAPI.BLL.Services
 
         public async Task<List<Transaction>> GetTransactionBetweenTwoDatesAsync(DateTime dateStart, DateTime dateEnd)
         {
-
             var dateStartOffSet = new DateTimeOffset(DateTime.SpecifyKind(dateStart, DateTimeKind.Unspecified));
 
             var dateEndOffSet = new DateTimeOffset(DateTime.SpecifyKind(dateEnd, DateTimeKind.Unspecified));
@@ -123,7 +123,7 @@ namespace LocationAPI.BLL.Services
 
         public async Task<List<Transaction>> GetTransactionForJanuaryAsync()
         {
-            var beginningOfJanuary = new DateTime(2024, 1, 1, 0, 0, 0);
+            var beginningOfJanuary = new DateTime(2024, 1, 1);
 
             var endOfJanuary = new DateTime(2024, 1, 31, 23, 59, 59, 999);
 
